@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flex Channel SKF - Ricette</title>
-
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#005195">
@@ -16,7 +15,7 @@
   <div class="logo-box">SKF</div>
   <div>
     <h1>Flex Channel Ricette</h1>
-    <p>Impostazioni, foto e storico ricette di lavoro</p>
+    <p>Impostazioni zone, robot ABB, foto e backup</p>
   </div>
 </header>
 
@@ -30,39 +29,105 @@
         <label>Codice ricetta</label>
         <input id="codice" placeholder="Es. 16101-2RS1">
       </div>
-
       <div>
         <label>Tipo cuscinetto</label>
         <input id="tipo" placeholder="Es. tipo base / schermato">
       </div>
     </div>
 
-    <div class="grid three">
-      <div>
-        <label>Zona 1</label>
-        <textarea id="zona1" placeholder="Impostazioni zona 1, lavatrice, ponticelli, pinze..."></textarea>
-      </div>
+    <div class="tabs-title">⚙️ Schede Zone</div>
 
-      <div>
-        <label>Zona 2</label>
-        <textarea id="zona2" placeholder="Rumorosità, pressori, canaline, regolazioni..."></textarea>
+    <div class="section-card">
+      <h3>Zona 1</h3>
+      <textarea id="zona1" placeholder="Impostazioni zona 1: lavatrice, ponticelli, pinze, canaline, quote, note..."></textarea>
+      <div class="photo-area">
+        <label>📸 Foto impostazioni Zona 1</label>
+        <input id="fotoZona1" type="file" accept="image/*" multiple>
+        <div id="previewZona1" class="preview-grid"></div>
       </div>
+    </div>
 
-      <div>
-        <label>Zona 3</label>
-        <textarea id="zona3" placeholder="Scarico, tavole, robot, regolazioni finali..."></textarea>
+    <div class="section-card">
+      <h3>Zona 2</h3>
+      <textarea id="zona2" placeholder="Impostazioni zona 2: rumorosità, pressori, tasselli, regolazioni, canaline..."></textarea>
+      <div class="photo-area">
+        <label>📸 Foto impostazioni Zona 2</label>
+        <input id="fotoZona2" type="file" accept="image/*" multiple>
+        <div id="previewZona2" class="preview-grid"></div>
       </div>
+    </div>
+
+    <div class="section-card">
+      <h3>Zona 3</h3>
+      <textarea id="zona3" placeholder="Impostazioni zona 3: scarico, tavole, regolazioni finali, canalina..."></textarea>
+      <div class="photo-area">
+        <label>📸 Foto impostazioni Zona 3</label>
+        <input id="fotoZona3" type="file" accept="image/*" multiple>
+        <div id="previewZona3" class="preview-grid"></div>
+      </div>
+    </div>
+
+    <div class="tabs-title">🤖 Schede Robot ABB</div>
+
+    <div class="section-card robot-card">
+      <h3>Robot Zona 1</h3>
+      <textarea id="robotZona1" placeholder="Impostazioni robot zona 1: prese, quote, altezza, pinze, punti, note..."></textarea>
+      <div class="grid two">
+        <div>
+          <label>📁 Importa backup/dati ABB Robot Zona 1</label>
+          <input id="backupRobotZona1" type="file" accept=".txt,.mod,.prg,.cfg,.json,.xml,.csv,.log,*/*">
+        </div>
+        <div>
+          <label>📸 Foto Robot Zona 1</label>
+          <input id="fotoRobotZona1" type="file" accept="image/*" multiple>
+        </div>
+      </div>
+      <textarea id="robotZona1Backup" class="backup-box" placeholder="Qui verrà visualizzato il contenuto importato dal backup ABB zona 1..." readonly></textarea>
+      <div id="previewRobotZona1" class="preview-grid"></div>
+    </div>
+
+    <div class="section-card robot-card">
+      <h3>Robot Zona 2</h3>
+      <textarea id="robotZona2" placeholder="Impostazioni robot zona 2: prese, quote, altezza, pinze, punti, note..."></textarea>
+      <div class="grid two">
+        <div>
+          <label>📁 Importa backup/dati ABB Robot Zona 2</label>
+          <input id="backupRobotZona2" type="file" accept=".txt,.mod,.prg,.cfg,.json,.xml,.csv,.log,*/*">
+        </div>
+        <div>
+          <label>📸 Foto Robot Zona 2</label>
+          <input id="fotoRobotZona2" type="file" accept="image/*" multiple>
+        </div>
+      </div>
+      <textarea id="robotZona2Backup" class="backup-box" placeholder="Qui verrà visualizzato il contenuto importato dal backup ABB zona 2..." readonly></textarea>
+      <div id="previewRobotZona2" class="preview-grid"></div>
+    </div>
+
+    <div class="section-card robot-card">
+      <h3>Robot Zona 3</h3>
+      <textarea id="robotZona3" placeholder="Impostazioni robot zona 3: prese, quote, altezza, pinze, punti, note..."></textarea>
+      <div class="grid two">
+        <div>
+          <label>📁 Importa backup/dati ABB Robot Zona 3</label>
+          <input id="backupRobotZona3" type="file" accept=".txt,.mod,.prg,.cfg,.json,.xml,.csv,.log,*/*">
+        </div>
+        <div>
+          <label>📸 Foto Robot Zona 3</label>
+          <input id="fotoRobotZona3" type="file" accept="image/*" multiple>
+        </div>
+      </div>
+      <textarea id="robotZona3Backup" class="backup-box" placeholder="Qui verrà visualizzato il contenuto importato dal backup ABB zona 3..." readonly></textarea>
+      <div id="previewRobotZona3" class="preview-grid"></div>
     </div>
 
     <div class="grid two">
       <div>
-        <label>Robot</label>
-        <textarea id="robot" placeholder="Robot 1, 2, 3, 4, 5 - quote, prese, altezze..."></textarea>
-      </div>
-
-      <div>
         <label>Keyence / Telecamere</label>
         <textarea id="keyence" placeholder="Controlli, scarti, soglie, note telecamera..."></textarea>
+      </div>
+      <div>
+        <label>Problemi riscontrati</label>
+        <textarea id="problema" placeholder="Descrivi blocchi, scarti, difficoltà..."></textarea>
       </div>
     </div>
 
@@ -71,7 +136,6 @@
         <label>Gioco radiale</label>
         <input id="gioco" placeholder="Es. 35-40 µm / C3H">
       </div>
-
       <div>
         <label>Rumorosità</label>
         <input id="rumorosita" placeholder="Es. OK / da controllare">
@@ -80,34 +144,14 @@
 
     <div class="grid two">
       <div>
-        <label>Problemi riscontrati</label>
-        <textarea id="problema" placeholder="Descrivi eventuali blocchi, scarti, difficoltà..."></textarea>
-      </div>
-
-      <div>
         <label>Soluzione applicata</label>
         <textarea id="soluzione" placeholder="Scrivi come è stato risolto il problema..."></textarea>
       </div>
-    </div>
-
-    <div class="grid two">
       <div>
-        <label>Operatore</label>
+        <label>Operatore / Turno</label>
         <input id="operatore" placeholder="Nome operatore">
-      </div>
-
-      <div>
-        <label>Turno</label>
         <input id="turno" placeholder="Mattina / Pomeriggio / Notte">
       </div>
-    </div>
-
-    <div class="photo-box">
-      <label>📸 Foto impostazioni / regolazioni</label>
-      <p class="small-note">Puoi selezionare più foto da PC o telefono. Verranno salvate nella ricetta.</p>
-      <input id="foto" type="file" accept="image/*" multiple>
-      <div id="previewContainer" class="preview-grid"></div>
-      <button class="secondary-btn" type="button" onclick="rimuoviTutteFoto()">Rimuovi tutte le foto</button>
     </div>
 
     <button class="primary-btn" onclick="salvaRicetta()">💾 Salva Ricetta</button>
@@ -116,11 +160,10 @@
 
   <section class="panel">
     <h2>🔍 Cerca Ricetta</h2>
-
-    <input id="search" placeholder="Cerca per codice, tipo, zona, problema..." oninput="cercaRicetta()">
+    <input id="search" placeholder="Cerca per codice, zona, robot, backup, problema..." oninput="cercaRicetta()">
 
     <div class="actions">
-      <button class="secondary-btn" onclick="esportaBackup()">⬇️ Esporta Backup</button>
+      <button class="secondary-btn" onclick="esportaBackup()">⬇️ Esporta Backup Ricette</button>
       <button class="danger-btn" onclick="cancellaTutto()">🗑 Cancella Tutto</button>
     </div>
 
@@ -131,6 +174,5 @@
 </main>
 
 <script src="app.js"></script>
-
 </body>
 </html>

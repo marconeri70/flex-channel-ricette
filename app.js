@@ -1,5 +1,22 @@
-let ricette = JSON.parse(localStorage.getItem("ricetteFlexChannelSKF")) || [];
-let fotoCorrenti = [];
+let ricette = JSON.parse(localStorage.getItem("ricetteFlexChannelSKF_v2")) || [];
+
+const sezioniFoto = [
+  "zona1",
+  "zona2",
+  "zona3",
+  "robotZona1",
+  "robotZona2",
+  "robotZona3"
+];
+
+let fotoSezioni = {
+  zona1: [],
+  zona2: [],
+  zona3: [],
+  robotZona1: [],
+  robotZona2: [],
+  robotZona3: []
+};
 
 const campi = [
   "codice",
@@ -7,7 +24,12 @@ const campi = [
   "zona1",
   "zona2",
   "zona3",
-  "robot",
+  "robotZona1",
+  "robotZona2",
+  "robotZona3",
+  "robotZona1Backup",
+  "robotZona2Backup",
+  "robotZona3Backup",
   "keyence",
   "gioco",
   "rumorosita",
@@ -17,19 +39,52 @@ const campi = [
   "turno"
 ];
 
-document.getElementById("foto").addEventListener("change", async function () {
-  const files = Array.from(this.files || []);
+const fileInputMap = {
+  fotoZona1: "zona1",
+  fotoZona2: "zona2",
+  fotoZona3: "zona3",
+  fotoRobotZona1: "robotZona1",
+  fotoRobotZona2: "robotZona2",
+  fotoRobotZona3: "robotZona3"
+};
 
-  if (files.length === 0) return;
+Object.keys(fileInputMap).forEach(inputId => {
+  document.getElementById(inputId).addEventListener("change", async function () {
+    const sezione = fileInputMap[inputId];
+    const files = Array.from(this.files || []);
+    for (const file of files) {
+      if (!file.type.startsWith("image/")) continue;
+      const imageData = await comprimiImmagine(file, 1200, 0.78);
+      fotoSezioni[sezione].push(imageData);
+    }
+    aggiornaAnteprime(sezione);
+    this.value = "";
+  });
+});
 
-  for (const file of files) {
-    if (!file.type.startsWith("image/")) continue;
-    const imageData = await comprimiImmagine(file, 1200, 0.78);
-    fotoCorrenti.push(imageData);
-  }
+const backupInputMap = {
+  backupRobotZona1: "robotZona1Backup",
+  backupRobotZona2: "robotZona2Backup",
+  backupRobotZona3: "robotZona3Backup"
+};
 
-  aggiornaAnteprime();
-  this.value = "";
+Object.keys(backupInputMap).forEach(inputId => {
+  document.getElementById(inputId).addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const targetId = backupInputMap[inputId];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      document.getElementById(targetId).value =
+        "FILE IMPORTATO: " + file.name + "\n" +
+        "DATA IMPORTAZIONE: " + new Date().toLocaleString("it-IT") + "\n\n" +
+        e.target.result;
+    };
+
+    reader.readAsText(file);
+  });
 });
 
 function comprimiImmagine(file, maxSize = 1200, quality = 0.78) {
@@ -68,29 +123,36 @@ function comprimiImmagine(file, maxSize = 1200, quality = 0.78) {
   });
 }
 
-function aggiornaAnteprime() {
-  const box = document.getElementById("previewContainer");
+function aggiornaAnteprime(sezione) {
+  const containerId = "preview" + nomePreview(sezione);
+  const box = document.getElementById(containerId);
   box.innerHTML = "";
 
-  fotoCorrenti.forEach((foto, index) => {
+  fotoSezioni[sezione].forEach((foto, index) => {
     box.innerHTML += `
       <div class="preview-item">
         <img src="${foto}" alt="Foto ${index + 1}" onclick="apriFoto('${foto}')">
-        <button class="mini-danger-btn" type="button" onclick="rimuoviFoto(${index})">Rimuovi</button>
+        <button class="mini-danger-btn" type="button" onclick="rimuoviFoto('${sezione}', ${index})">Rimuovi</button>
       </div>
     `;
   });
 }
 
-function rimuoviFoto(index) {
-  fotoCorrenti.splice(index, 1);
-  aggiornaAnteprime();
+function nomePreview(sezione) {
+  const map = {
+    zona1: "Zona1",
+    zona2: "Zona2",
+    zona3: "Zona3",
+    robotZona1: "RobotZona1",
+    robotZona2: "RobotZona2",
+    robotZona3: "RobotZona3"
+  };
+  return map[sezione];
 }
 
-function rimuoviTutteFoto() {
-  fotoCorrenti = [];
-  document.getElementById("foto").value = "";
-  aggiornaAnteprime();
+function rimuoviFoto(sezione, index) {
+  fotoSezioni[sezione].splice(index, 1);
+  aggiornaAnteprime(sezione);
 }
 
 function valore(id) {
@@ -107,12 +169,39 @@ function salvaRicetta() {
 
   const nuova = {
     id: Date.now(),
-    codice: codice,
+    codice,
     tipo: valore("tipo"),
-    zona1: valore("zona1"),
-    zona2: valore("zona2"),
-    zona3: valore("zona3"),
-    robot: valore("robot"),
+    zone: {
+      zona1: {
+        note: valore("zona1"),
+        foto: [...fotoSezioni.zona1]
+      },
+      zona2: {
+        note: valore("zona2"),
+        foto: [...fotoSezioni.zona2]
+      },
+      zona3: {
+        note: valore("zona3"),
+        foto: [...fotoSezioni.zona3]
+      }
+    },
+    robot: {
+      zona1: {
+        note: valore("robotZona1"),
+        backup: valore("robotZona1Backup"),
+        foto: [...fotoSezioni.robotZona1]
+      },
+      zona2: {
+        note: valore("robotZona2"),
+        backup: valore("robotZona2Backup"),
+        foto: [...fotoSezioni.robotZona2]
+      },
+      zona3: {
+        note: valore("robotZona3"),
+        backup: valore("robotZona3Backup"),
+        foto: [...fotoSezioni.robotZona3]
+      }
+    },
     keyence: valore("keyence"),
     gioco: valore("gioco"),
     rumorosita: valore("rumorosita"),
@@ -120,20 +209,19 @@ function salvaRicetta() {
     soluzione: valore("soluzione"),
     operatore: valore("operatore"),
     turno: valore("turno"),
-    foto: [...fotoCorrenti],
     data: new Date().toLocaleString("it-IT")
   };
 
   ricette.unshift(nuova);
   salvaArchivio();
 
-  alert("✅ Ricetta salvata con impostazioni e foto!");
+  alert("✅ Ricetta salvata con foto per zona e dati robot ABB!");
   pulisciCampi();
   mostraRicette();
 }
 
 function salvaArchivio() {
-  localStorage.setItem("ricetteFlexChannelSKF", JSON.stringify(ricette));
+  localStorage.setItem("ricetteFlexChannelSKF_v2", JSON.stringify(ricette));
 }
 
 function pulisciCampi() {
@@ -141,7 +229,19 @@ function pulisciCampi() {
     document.getElementById(id).value = "";
   });
 
-  rimuoviTutteFoto();
+  Object.keys(fileInputMap).forEach(id => document.getElementById(id).value = "");
+  Object.keys(backupInputMap).forEach(id => document.getElementById(id).value = "");
+
+  fotoSezioni = {
+    zona1: [],
+    zona2: [],
+    zona3: [],
+    robotZona1: [],
+    robotZona2: [],
+    robotZona3: []
+  };
+
+  sezioniFoto.forEach(sezione => aggiornaAnteprime(sezione));
 }
 
 function eliminaRicetta(id) {
@@ -156,7 +256,7 @@ function cercaRicetta() {
   const testo = document.getElementById("search").value.toLowerCase();
 
   const filtrate = ricette.filter(r => {
-    return Object.values(r).join(" ").toLowerCase().includes(testo);
+    return JSON.stringify(r).toLowerCase().includes(testo);
   });
 
   mostraRicette(filtrate);
@@ -176,21 +276,6 @@ function mostraRicette(lista = ricette) {
   div.innerHTML = "";
 
   lista.forEach(r => {
-    const fotoArray = Array.isArray(r.foto) ? r.foto : (r.foto ? [r.foto] : []);
-
-    const galleria = fotoArray.length > 0
-      ? `
-        <h3>📸 Foto salvate (${fotoArray.length})</h3>
-        <div class="gallery-grid">
-          ${fotoArray.map((foto, index) => `
-            <div class="gallery-item">
-              <img src="${foto}" alt="Foto salvata ${index + 1}" onclick="apriFoto('${foto}')">
-            </div>
-          `).join("")}
-        </div>
-      `
-      : "";
-
     div.innerHTML += `
       <div class="card">
         <div class="card-title">${escapeHTML(r.codice)}</div>
@@ -198,13 +283,46 @@ function mostraRicette(lista = ricette) {
           ${escapeHTML(r.tipo || "Tipo non indicato")} • ${escapeHTML(r.data)}
         </div>
 
-        ${galleria}
+        <div class="saved-section">
+          <h4>⚙️ Zona 1</h4>
+          <div>${testoSicuro(r.zone?.zona1?.note)}</div>
+          ${galleria(r.zone?.zona1?.foto)}
+        </div>
+
+        <div class="saved-section">
+          <h4>⚙️ Zona 2</h4>
+          <div>${testoSicuro(r.zone?.zona2?.note)}</div>
+          ${galleria(r.zone?.zona2?.foto)}
+        </div>
+
+        <div class="saved-section">
+          <h4>⚙️ Zona 3</h4>
+          <div>${testoSicuro(r.zone?.zona3?.note)}</div>
+          ${galleria(r.zone?.zona3?.foto)}
+        </div>
+
+        <div class="saved-section robot">
+          <h4>🤖 Robot Zona 1</h4>
+          <div>${testoSicuro(r.robot?.zona1?.note)}</div>
+          ${backupBox(r.robot?.zona1?.backup)}
+          ${galleria(r.robot?.zona1?.foto)}
+        </div>
+
+        <div class="saved-section robot">
+          <h4>🤖 Robot Zona 2</h4>
+          <div>${testoSicuro(r.robot?.zona2?.note)}</div>
+          ${backupBox(r.robot?.zona2?.backup)}
+          ${galleria(r.robot?.zona2?.foto)}
+        </div>
+
+        <div class="saved-section robot">
+          <h4>🤖 Robot Zona 3</h4>
+          <div>${testoSicuro(r.robot?.zona3?.note)}</div>
+          ${backupBox(r.robot?.zona3?.backup)}
+          ${galleria(r.robot?.zona3?.foto)}
+        </div>
 
         <div class="info-grid">
-          <div class="info-box"><strong>Zona 1</strong><br>${testoSicuro(r.zona1)}</div>
-          <div class="info-box"><strong>Zona 2</strong><br>${testoSicuro(r.zona2)}</div>
-          <div class="info-box"><strong>Zona 3</strong><br>${testoSicuro(r.zona3)}</div>
-          <div class="info-box"><strong>Robot</strong><br>${testoSicuro(r.robot)}</div>
           <div class="info-box"><strong>Keyence</strong><br>${testoSicuro(r.keyence)}</div>
           <div class="info-box"><strong>Gioco radiale</strong><br>${testoSicuro(r.gioco)}</div>
           <div class="info-box"><strong>Rumorosità</strong><br>${testoSicuro(r.rumorosita)}</div>
@@ -217,6 +335,25 @@ function mostraRicette(lista = ricette) {
       </div>
     `;
   });
+}
+
+function galleria(fotoArray) {
+  if (!Array.isArray(fotoArray) || fotoArray.length === 0) return "";
+  return `
+    <div class="gallery-grid">
+      ${fotoArray.map((foto, index) => `
+        <div class="gallery-item">
+          <img src="${foto}" alt="Foto ${index + 1}" onclick="apriFoto('${foto}')">
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function backupBox(text) {
+  if (!text) return "";
+  const breve = text.length > 1200 ? text.substring(0, 1200) + "\n\n[...] Backup più lungo salvato nel file JSON di esportazione." : text;
+  return `<textarea class="backup-box" readonly>${escapeHTML(breve)}</textarea>`;
 }
 
 function testoSicuro(valore) {
