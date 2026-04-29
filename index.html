@@ -2,46 +2,132 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Flex Channel Ricette SKF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flex Channel SKF - Ricette</title>
+
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#005195">
 </head>
+
 <body>
 
-<h1>🔧 Flex Channel - Ricette SKF</h1>
+<header class="app-header">
+  <div class="logo-box">SKF</div>
+  <div>
+    <h1>Flex Channel Ricette</h1>
+    <p>Memorizzazione impostazioni di lavoro</p>
+  </div>
+</header>
 
-<div class="container">
+<main class="container">
 
-  <h2>➕ Nuova Ricetta</h2>
+  <section class="panel">
+    <h2>➕ Nuova Ricetta</h2>
 
-  <input id="codice" placeholder="Codice ricetta (es. 16101-2RS1)">
-  <input id="tipo" placeholder="Tipo cuscinetto">
+    <div class="grid two">
+      <div>
+        <label>Codice ricetta</label>
+        <input id="codice" placeholder="Es. 16101-2RS1">
+      </div>
 
-  <textarea id="zona1" placeholder="Zona 1"></textarea>
-  <textarea id="zona2" placeholder="Zona 2"></textarea>
-  <textarea id="zona3" placeholder="Zona 3"></textarea>
+      <div>
+        <label>Tipo cuscinetto</label>
+        <input id="tipo" placeholder="Es. tipo base / schermato">
+      </div>
+    </div>
 
-  <textarea id="robot" placeholder="Robot"></textarea>
-  <textarea id="keyence" placeholder="Keyence"></textarea>
+    <div class="grid three">
+      <div>
+        <label>Zona 1</label>
+        <textarea id="zona1" placeholder="Impostazioni zona 1, lavatrice, ponticelli, pinze..."></textarea>
+      </div>
 
-  <input id="gioco" placeholder="Gioco radiale">
-  <input id="rumorosita" placeholder="Rumorosità">
+      <div>
+        <label>Zona 2</label>
+        <textarea id="zona2" placeholder="Rumorosità, pressori, canaline, regolazioni..."></textarea>
+      </div>
 
-  <textarea id="problema" placeholder="Problemi"></textarea>
-  <textarea id="soluzione" placeholder="Soluzioni"></textarea>
+      <div>
+        <label>Zona 3</label>
+        <textarea id="zona3" placeholder="Scarico, tavole, robot, regolazioni finali..."></textarea>
+      </div>
+    </div>
 
-  <input id="operatore" placeholder="Operatore">
-  <input id="turno" placeholder="Turno">
+    <div class="grid two">
+      <div>
+        <label>Robot</label>
+        <textarea id="robot" placeholder="Robot 1, 2, 3, 4, 5 - quote, prese, altezze..."></textarea>
+      </div>
 
-  <button onclick="salvaRicetta()">💾 Salva</button>
+      <div>
+        <label>Keyence / Telecamere</label>
+        <textarea id="keyence" placeholder="Controlli, scarti, soglie, note telecamera..."></textarea>
+      </div>
+    </div>
 
-  <hr>
+    <div class="grid two">
+      <div>
+        <label>Gioco radiale</label>
+        <input id="gioco" placeholder="Es. 35-40 µm / C3H">
+      </div>
 
-  <h2>🔍 Cerca Ricetta</h2>
-  <input id="search" placeholder="Inserisci codice..." oninput="cercaRicetta()">
+      <div>
+        <label>Rumorosità</label>
+        <input id="rumorosita" placeholder="Es. OK / da controllare">
+      </div>
+    </div>
 
-  <div id="lista"></div>
+    <div class="grid two">
+      <div>
+        <label>Problemi riscontrati</label>
+        <textarea id="problema" placeholder="Descrivi eventuali blocchi, scarti, difficoltà..."></textarea>
+      </div>
 
-</div>
+      <div>
+        <label>Soluzione applicata</label>
+        <textarea id="soluzione" placeholder="Scrivi come è stato risolto il problema..."></textarea>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div>
+        <label>Operatore</label>
+        <input id="operatore" placeholder="Nome operatore">
+      </div>
+
+      <div>
+        <label>Turno</label>
+        <input id="turno" placeholder="Mattina / Pomeriggio / Notte">
+      </div>
+    </div>
+
+    <div class="photo-box">
+      <label>📸 Foto ricetta / regolazione</label>
+      <input id="foto" type="file" accept="image/*">
+      <img id="preview" class="preview" style="display:none;" alt="Anteprima foto">
+      <button class="secondary-btn" type="button" onclick="rimuoviFoto()">Rimuovi foto</button>
+    </div>
+
+    <button class="primary-btn" onclick="salvaRicetta()">💾 Salva Ricetta</button>
+    <button class="secondary-btn" onclick="pulisciCampi()">🧹 Pulisci Campi</button>
+  </section>
+
+  <section class="panel">
+    <h2>🔍 Cerca Ricetta</h2>
+
+    <input id="search" placeholder="Cerca per codice, tipo, zona, problema..." oninput="cercaRicetta()">
+
+    <div class="actions">
+      <button class="secondary-btn" onclick="esportaBackup()">⬇️ Esporta Backup</button>
+      <button class="danger-btn" onclick="cancellaTutto()">🗑 Cancella Tutto</button>
+    </div>
+
+    <div id="contatore" class="counter"></div>
+    <div id="lista"></div>
+  </section>
+
+</main>
 
 <script src="app.js"></script>
 
