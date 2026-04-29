@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Flex Channel Ricette SKF</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🔧 Flex Channel - Ricette SKF</h1>
+
+<div class="container">
+
+  <h2>➕ Nuova Ricetta</h2>
+
+  <input id="codice" placeholder="Codice ricetta (es. 16101-2RS1)">
+  <input id="tipo" placeholder="Tipo cuscinetto">
+
+  <textarea id="zona1" placeholder="Zona 1"></textarea>
+  <textarea id="zona2" placeholder="Zona 2"></textarea>
+  <textarea id="zona3" placeholder="Zona 3"></textarea>
+
+  <textarea id="robot" placeholder="Robot"></textarea>
+  <textarea id="keyence" placeholder="Keyence"></textarea>
+
+  <input id="gioco" placeholder="Gioco radiale">
+  <input id="rumorosita" placeholder="Rumorosità">
+
+  <textarea id="problema" placeholder="Problemi"></textarea>
+  <textarea id="soluzione" placeholder="Soluzioni"></textarea>
+
+  <input id="operatore" placeholder="Operatore">
+  <input id="turno" placeholder="Turno">
+
+  <button onclick="salvaRicetta()">💾 Salva</button>
+
+  <hr>
+
+  <h2>🔍 Cerca Ricetta</h2>
+  <input id="search" placeholder="Inserisci codice..." oninput="cercaRicetta()">
+
+  <div id="lista"></div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
