@@ -31,6 +31,7 @@ body {
   font-weight: 900;
   font-size: 22px;
   letter-spacing: 1px;
+  flex-shrink: 0;
 }
 
 .app-header h1 {
@@ -83,7 +84,7 @@ textarea {
 }
 
 textarea {
-  min-height: 90px;
+  min-height: 95px;
   resize: vertical;
 }
 
@@ -109,7 +110,8 @@ textarea:focus {
 
 .primary-btn,
 .secondary-btn,
-.danger-btn {
+.danger-btn,
+.mini-danger-btn {
   width: 100%;
   border: none;
   border-radius: 12px;
@@ -138,13 +140,21 @@ textarea:focus {
   background: #cbd5e1;
 }
 
-.danger-btn {
+.danger-btn,
+.mini-danger-btn {
   background: #cc0000;
   color: white;
 }
 
-.danger-btn:hover {
+.danger-btn:hover,
+.mini-danger-btn:hover {
   background: #990000;
+}
+
+.mini-danger-btn {
+  padding: 8px;
+  font-size: 13px;
+  border-radius: 8px;
 }
 
 .photo-box {
@@ -155,14 +165,37 @@ textarea:focus {
   border: 1px dashed #005195;
 }
 
-.preview,
-.foto-ricetta {
-  width: 100%;
-  max-height: 280px;
-  object-fit: cover;
+.small-note {
+  margin: 0 0 10px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.preview-grid,
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.preview-item,
+.gallery-item {
+  background: white;
+  border: 1px solid #cbd5e1;
   border-radius: 12px;
-  margin: 10px 0;
-  border: 3px solid #005195;
+  padding: 8px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+.preview-item img,
+.gallery-item img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #005195;
+  cursor: pointer;
 }
 
 .actions {
@@ -224,6 +257,37 @@ textarea:focus {
   border-radius: 14px;
   text-align: center;
   color: #64748b;
+}
+
+.photo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 18px;
+}
+
+.photo-modal img {
+  max-width: 96vw;
+  max-height: 86vh;
+  border-radius: 14px;
+  background: white;
+}
+
+.photo-modal button {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: auto;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: white;
+  color: #111827;
+  border: none;
+  font-weight: bold;
 }
 
 @media (max-width: 760px) {

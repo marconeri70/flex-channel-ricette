@@ -16,7 +16,7 @@
   <div class="logo-box">SKF</div>
   <div>
     <h1>Flex Channel Ricette</h1>
-    <p>Memorizzazione impostazioni di lavoro</p>
+    <p>Impostazioni, foto e storico ricette di lavoro</p>
   </div>
 </header>
 
@@ -103,10 +103,11 @@
     </div>
 
     <div class="photo-box">
-      <label>📸 Foto ricetta / regolazione</label>
-      <input id="foto" type="file" accept="image/*">
-      <img id="preview" class="preview" style="display:none;" alt="Anteprima foto">
-      <button class="secondary-btn" type="button" onclick="rimuoviFoto()">Rimuovi foto</button>
+      <label>📸 Foto impostazioni / regolazioni</label>
+      <p class="small-note">Puoi selezionare più foto da PC o telefono. Verranno salvate nella ricetta.</p>
+      <input id="foto" type="file" accept="image/*" multiple>
+      <div id="previewContainer" class="preview-grid"></div>
+      <button class="secondary-btn" type="button" onclick="rimuoviTutteFoto()">Rimuovi tutte le foto</button>
     </div>
 
     <button class="primary-btn" onclick="salvaRicetta()">💾 Salva Ricetta</button>
