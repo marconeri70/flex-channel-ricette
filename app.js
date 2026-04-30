@@ -365,3 +365,12 @@ function chiudiFoto() {
 initStruttura();
 creaInterfaccia();
 mostraRicette();
+
+// Registrazione Service Worker per PWA offline
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Service Worker registrato con successo.', reg.scope))
+      .catch(err => console.error('Errore registrazione Service Worker:', err));
+  });
+}
