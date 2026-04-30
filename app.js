@@ -362,15 +362,46 @@ function chiudiFoto() {
     if (m) m.style.display = "none";
 }
 
+// INIZIALIZZAZIONE UI
 initStruttura();
 creaInterfaccia();
 mostraRicette();
 
-// Registrazione Service Worker per PWA offline
+
+// ==========================================
+// PWA & SERVICE WORKER LOGIC
+// ==========================================
+
+// 1. Registrazione Service Worker per il funzionamento offline
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('Service Worker registrato con successo.', reg.scope))
-      .catch(err => console.error('Errore registrazione Service Worker:', err));
+      .then(reg => console.log('Service Worker registrato. Scope:', reg.scope))
+      .catch(err => console.error('Errore registrazione SW:', err));
   });
 }
+
+// 2. Logica di Installazione Tasto PWA
+let deferredPrompt;
+const installBtn = document.getElementById('installAppBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); // Blocca il banner nativo automatico
+  deferredPrompt = e; // Salva l'evento
+  installBtn.style.display = 'block'; // Mostra il nostro tasto custom
+});
+
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt(); // Mostra il prompt nativo
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`Esito installazione: ${outcome}`);
+    deferredPrompt = null;
+    installBtn.style.display = 'none'; // Nascondi dopo la scelta
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  installBtn.style.display = 'none';
+  console.log('App installata correttamente.');
+});
