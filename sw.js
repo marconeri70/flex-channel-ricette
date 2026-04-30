@@ -1,36 +1,100 @@
-const CACHE_NAME = 'skf-flex-channel-v2';
-const ASSETS = [
-  './',
-  './index.html',
-  './style.css',
-  './app.js',
-  './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
-];
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Flex Channel SKF Ricette</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#005195">
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-box">SKF</div>
+    <div>
+      <h1>Flex Channel Ricette</h1>
+      <p>Zone a scomparsa, backup, foto e robot ABB</p>
+    </div>
+  </header>
+  <main class="container">
+    
+    <!-- Tasto Installazione Dinamico -->
+    <button id="installAppBtn" class="primary-btn" style="display: none; background-color: #0f766e; margin-bottom: 18px; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+      📲 Installa App su questo Dispositivo
+    </button>
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
-  self.skipWaiting();
-});
+    <section class="panel">
+      <h2>➕ Nuova Ricetta</h2>
+      <div class="grid two">
+        <div>
+          <label>Codice ricetta</label>
+          <input id="codice" placeholder="Es. 16101-2RS1">
+        </div>
+        <div>
+          <label>Tipo cuscinetto</label>
+          <input id="tipo" placeholder="Es. tipo base / schermato">
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button class="secondary-btn" onclick="apriTutto()" type="button">📂 Apri tutte</button>
+        <button class="secondary-btn" onclick="chiudiTutto()" type="button">📁 Chiudi tutte</button>
+      </div>
+      <div id="zoneContainer"></div>
+      <div class="tabs-title red">🤖 Schede Robot ABB</div>
+      <div id="robotContainer"></div>
+      <div class="grid two">
+        <div>
+          <label>Keyence / Telecamere</label>
+          <textarea id="keyence"></textarea>
+        </div>
+        <div>
+          <label>Problemi riscontrati</label>
+          <textarea id="problema"></textarea>
+        </div>
+      </div>
+      <div class="grid two">
+        <div>
+          <label>Gioco radiale</label>
+          <input id="gioco">
+        </div>
+        <div>
+          <label>Rumorosità</label>
+          <input id="rumorosita">
+        </div>
+      </div>
+      <div class="grid two">
+        <div>
+          <label>Soluzione applicata</label>
+          <textarea id="soluzione"></textarea>
+        </div>
+        <div>
+          <label>Operatore / Turno</label>
+          <input id="operatore">
+          <input id="turno" placeholder="Mattina / Pomeriggio / Notte">
+        </div>
+      </div>
+      <button class="primary-btn" onclick="salvaRicetta()">💾 Salva Ricetta</button>
+      <button class="secondary-btn" onclick="nuovaRicetta()">🆕 Nuova Ricetta / Ripristina Schede</button>
+    </section>
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-      );
-    })
-  );
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
-    })
-  );
-});
+    <section class="panel">
+      <h2>🔍 Cerca Ricetta</h2>
+      <input id="search" placeholder="Cerca..." oninput="cercaRicetta()">
+      <div class="actions three">
+        <button class="secondary-btn" onclick="esportaBackup()">⬇️ Esporta Backup</button>
+        <label class="import-btn" for="importBackup">⬆️ Importa Backup</label>
+        <button class="danger-btn" onclick="cancellaTutto()">🗑 Cancella Tutto</button>
+      </div>
+      <input id="importBackup" class="hidden-file" type="file" accept=".json,application/json">
+      <div id="contatore" class="counter"></div>
+      <div id="lista"></div>
+    </section>
+  </main>
+  
+  <script>
+    const ZONE_CONFIG={"zona1": ["Comandi di zona", "Layout", "Impostazioni di zona", "Gestione calibrature", "Gestione contenitori", "Tempi ciclo", "Misure IR+OR", "Trend misure IR", "Trend misura OR", "Appaiatura", "Log appaiatura", "Trend appaiatura", "Statistiche appaiatura", "Tracking"], "zona2": ["Comandi di zona", "Layout", "Impostazioni di zona", "Gestione calibrature", "Gestione contenitori", "Tempi ciclo", "Controllo scorrevolezza", "Gestione scorrevolezza", "Misura gioco radiale", "Controllo gioco radiale", "Trend gioco radiale", "Controllo foro e diametro", "Trend misure foro", "Trend misure diametro"], "zona3": ["Comandi di zona", "Layout", "Impostazioni di zona 1/2", "Gestione calibrature", "Gestione contenitori", "Tempi ciclo", "Gestione bilancia", "Gestione pesatura", "Controllo del peso", "Trend pesatura", "Controllo pressioni grasso", "Trend pressioni grasso 1", "Trend pressioni grasso 2", "Trend pressioni grasso 3"]};
+    const ROBOT_CONFIG={"robotZona1": "Robot Zona 1", "robotZona2": "Robot Zona 2", "robotZona3": "Robot Zona 3"};
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
