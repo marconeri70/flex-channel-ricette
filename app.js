@@ -1,4 +1,30 @@
-let ricette = JSON.parse(localStorage.getItem("ricetteFlexChannelSKFCompleta")) || [];
+
+window.addEventListener("error", function(event) {
+  console.error("Errore app:", event.error || event.message);
+  const box = document.createElement("div");
+  box.style.cssText = "background:#fee2e2;color:#7f1d1d;padding:12px;margin:12px;border-radius:10px;font-weight:bold;";
+  box.textContent = "Errore nell'app: " + (event.message || "controlla i file caricati");
+  document.body.prepend(box);
+});
+
+const STORAGE_KEY = "ricetteFlexChannelSKFCompleta_FIX";
+
+function caricaArchivioSicuro() {
+  try {
+    const nuovo = localStorage.getItem(STORAGE_KEY);
+    const vecchio = localStorage.getItem("ricetteFlexChannelSKFCompleta");
+    const raw = nuovo || vecchio;
+    if (!raw) return [];
+    const dati = JSON.parse(raw);
+    return Array.isArray(dati) ? dati : [];
+  } catch (errore) {
+    console.error("Archivio locale non leggibile:", errore);
+    alert("Archivio locale danneggiato o non leggibile. L'app parte vuota. Se hai un backup JSON, usa Importa Backup.");
+    return [];
+  }
+}
+
+let ricette = caricaArchivioSicuro();
 let fotoSezioni = {};
 let backupRobot = {};
 let schedeEliminate = {};
@@ -213,14 +239,14 @@ async function caricaFotoDaInput(input, id) {
 
   for (const file of files) {
     if (!file.type.startsWith("image/")) continue;
-    fotoSezioni[id].push(await comprimiImmagine(file, 1200, 0.78));
+    fotoSezioni[id].push(await comprimiImmagine(file, 900, 0.65));
   }
 
   aggiornaAnteprime(id);
   input.value = "";
 }
 
-function comprimiImmagine(file, maxSize = 1200, quality = 0.78) {
+function comprimiImmagine(file, maxSize = 900, quality = 0.65) {
   return new Promise(resolve => {
     const reader = new FileReader();
 
@@ -374,7 +400,12 @@ function nuovaRicetta() {
 }
 
 function salvaArchivio() {
-  localStorage.setItem("ricetteFlexChannelSKFCompleta", JSON.stringify(ricette));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ricette));
+  } catch (errore) {
+    console.error("Errore salvataggio archivio:", errore);
+    alert("Memoria del browser piena. Esporta un backup, poi elimina alcune foto/ricette oppure usa meno foto per ricetta.");
+  }
 }
 
 function eliminaRicetta(id) {
